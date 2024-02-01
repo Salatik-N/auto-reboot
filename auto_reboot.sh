@@ -31,7 +31,7 @@ fi
 
 if ! crontab -l | grep -q "auto_reboot.sh"; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') Created cron" | tee -a "$log_file"
-    (crontab -l ; echo "*/15 * * * * $HOME/auto-reboot/auto_reboot.sh") | crontab -
+    (crontab -u $(whoami) -l; echo "*/15 * * * * $HOME/auto-reboot/auto_reboot.sh" ) | crontab -u $(whoami) -
 fi
 
 if ! screen -ls | grep -q "$screen_session"; then
