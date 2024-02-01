@@ -29,13 +29,10 @@ if [ ! -f "$qubic_log_file" ]; then
     touch "$HOME/auto-reboot/qubic_log.txt"
 fi
 
-crontab -l > /tmp/crontab.tmp
-if ! grep -q "auto_reboot.sh" /tmp/crontab.tmp; then
+if ! crontab -l | grep -q "auto_reboot.sh"; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') Created cron" | tee -a "$log_file"
-    echo "*/15 * * * * $HOME/auto-reboot/auto_reboot.sh" >> /tmp/crontab.tmp
-    crontab /tmp/crontab.tmp
+    (crontab -l ; echo "*/15 * * * * $HOME/auto-reboot/auto_reboot.sh") | crontab -
 fi
-rm /tmp/crontab.tmp
 
 if ! screen -ls | grep -q "$screen_session"; then
    echo "$(date '+%Y-%m-%d %H:%M:%S') Created screen" | tee -a "$log_file"
