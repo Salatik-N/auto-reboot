@@ -7,8 +7,11 @@ screen_session="qubic"
 qubic="$HOME/projects/qubic/qliclient/qli-Client"
 
 if [ ! -f "$qubic" ]; then
-    echo "$(date '+%Y-%m-%d %H:%M:%S') No qli-Client file" | tee -a "$log_file"
-    exit 1
+    qubic="$HOME/projects/qubic_client/qliclient/qli-Client"
+    if [ ! -f "$qubic" ]; then
+        echo "$(date '+%Y-%m-%d %H:%M:%S') No qli-Client file" | tee -a "$log_file"
+        exit 1
+    fi
 fi
 
 if [ ! -d "$main_folder" ]; then
