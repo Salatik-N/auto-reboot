@@ -4,7 +4,22 @@ log_file="$HOME/auto-reboot/log.txt"
 qubic_log_file="$HOME/auto-reboot/qubic_log.txt"
 screen_session="qubic"
 qubic="$HOME/projects/qubic/qliclient/qli-Client"
-process_name="qli-Client"
+
+if [ ! -f "$qubic" ]; then
+    exit 1
+fi
+
+if [ ! -f "$log_file" ]; then
+    touch "$HOME/auto-reboot/log.txt"
+fi
+
+if [ ! -f "$qubic_log_file" ]; then
+    touch "$HOME/auto-reboot/qubic_log.txt"
+fi
+
+if ! crontab -l | grep -q "auto_reboot.sh"; then
+    echo "*/15 * * * * $HOME/auto-reboot/auto_reboot.sh" | crontab -
+fi
 
 if ! screen -ls | grep -q "$screen_session"; then
    echo "$(date '+%Y-%m-%d %H:%M:%S') Create screen" | tee -a "$log_file"
