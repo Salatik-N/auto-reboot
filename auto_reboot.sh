@@ -40,7 +40,7 @@ if ! screen -ls | grep -q "$screen_session"; then
 fi
 
 check_for_words() {
-    if grep -q "INFO" <<< "$1" && ! grep -q "0 it/s" <<< "$1" && grep -q "it/s" <<< "$1" then
+    if grep -q "INFO" <<< "$1" && ! grep -q "0 it/s" <<< "$1" && grep -q "it/s" <<< "$1"; then
         return 1
     else
         if ! ping -c 1 8.8.8.8 &> /dev/null; then
