@@ -40,7 +40,7 @@ if ! screen -ls | grep -q "$screen_session"; then
 fi
 
 check_for_words() {
-    if grep -q "INFO" <<< "$1" && grep -q "it/s" <<< "$1"; then
+    if grep -q "INFO" <<< "$1" && grep -q "0 it/s" <<< "$1" && ! ping -c 1 8.8.8.8 &> /dev/null; then
         return 1
     else
         return 0
@@ -52,15 +52,15 @@ for attempt in {1..3}; do
 
     if check_for_words "$last_line"; then
        if [ "$attempt" -lt 3 ]; then
-          echo "$(date '+%Y-%m-%d %H:%M:%S') No last line!" | tee -a "$log_file"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') No last line or Internet!" | tee -a "$log_file"
           sleep 120
        else
-          echo "$(date '+%Y-%m-%d %H:%M:%S') No last line. Attempting to restart the server..." | tee -a "$log_file"
+          echo "$(date '+%Y-%m-%d %H:%M:%S') No last line or Internet. Attempting to restart the server..." | tee -a "$log_file"
           truncate -s 0 "$qubic_log_file"
           sudo reboot
        fi
     else
-       echo "$(date '+%Y-%m-%d %H:%M:%S') The last line is good!" | tee -a "$log_file"
+       echo "$(date '+%Y-%m-%d %H:%M:%S') The last line and Internet is good!" | tee -a "$log_file"
        truncate -s 0 "$qubic_log_file"
        break
     fi
